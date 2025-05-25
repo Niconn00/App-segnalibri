@@ -35,6 +35,7 @@
       <div>
         <div class="flex px-4 py-3">
           <button
+            id="getStartedBtn"
             class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-5 flex-1 bg-[#1993e5] text-white text-base font-bold leading-normal tracking-[0.015em]"
           >
             <span class="truncate">Get Started</span>
@@ -43,5 +44,16 @@
         <div class="h-5 bg-[#111b22]"></div>
       </div>
     </div>
+    <script src="js/main.js"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        const getStartedBtn = document.getElementById('getStartedBtn');
+        if (getStartedBtn) {
+          getStartedBtn.addEventListener('click', function() {
+            window.location.href = 'loginpage.html';
+          });
+        }
+      });
+    </script>
   </body>
 </html>
