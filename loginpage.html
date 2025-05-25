@@ -20,17 +20,18 @@
     >
       <div>
         <div class="flex items-center bg-[#111b22] p-4 pb-2 justify-between">
-          <div class="text-white flex size-12 shrink-0 items-center" data-icon="ArrowLeft" data-size="24px" data-weight="regular">
+          <div id="backArrow" class="text-white flex size-12 shrink-0 items-center cursor-pointer" data-icon="ArrowLeft" data-size="24px" data-weight="regular">
             <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" fill="currentColor" viewBox="0 0 256 256">
               <path d="M224,128a8,8,0,0,1-8,8H59.31l58.35,58.34a8,8,0,0,1-11.32,11.32l-72-72a8,8,0,0,1,0-11.32l72-72a8,8,0,0,1,11.32,11.32L59.31,120H216A8,8,0,0,1,224,128Z"></path>
             </svg>
           </div>
           <h2 class="text-white text-lg font-bold leading-tight tracking-[-0.015em] flex-1 text-center pr-12">Book Tracker</h2>
         </div>
-        <h2 class="text-white tracking-light text-[28px] font-bold leading-tight px-4 text-center pb-3 pt-5">Welcome back</h2>
+        <h2 id="authHeading" class="text-white tracking-light text-[28px] font-bold leading-tight px-4 text-center pb-3 pt-5">Welcome back</h2>
         <div class="flex max-w-[480px] flex-wrap items-end gap-4 px-4 py-3">
           <label class="flex flex-col min-w-40 flex-1">
             <input
+              id="emailInput"
               placeholder="Email"
               class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-white focus:outline-0 focus:ring-0 border-none bg-[#243947] focus:border-none h-14 placeholder:text-[#93b3c8] p-4 text-base font-normal leading-normal"
               value=""
@@ -40,7 +41,9 @@
         <div class="flex max-w-[480px] flex-wrap items-end gap-4 px-4 py-3">
           <label class="flex flex-col min-w-40 flex-1">
             <input
+              id="passwordInput"
               placeholder="Password"
+              type="password"
               class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-white focus:outline-0 focus:ring-0 border-none bg-[#243947] focus:border-none h-14 placeholder:text-[#93b3c8] p-4 text-base font-normal leading-normal"
               value=""
             />
@@ -48,12 +51,13 @@
         </div>
         <div class="flex px-4 py-3">
           <button
+            id="loginBtn"
             class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-5 flex-1 bg-[#1993e5] text-white text-base font-bold leading-normal tracking-[0.015em]"
           >
             <span class="truncate">Log in</span>
           </button>
         </div>
-        <p class="text-[#93b3c8] text-sm font-normal leading-normal pb-3 pt-1 px-4 text-center underline">Don't have an account? Sign up</p>
+        <p id="signupLink" class="text-[#93b3c8] text-sm font-normal leading-normal pb-3 pt-1 px-4 text-center underline cursor-pointer">Don't have an account? Sign up</p>
       </div>
       <div>
         <div
@@ -66,5 +70,72 @@
         ></div>
       </div>
     </div>
+    <script src="js/main.js"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        const emailInput = document.getElementById('emailInput');
+        const passwordInput = document.getElementById('passwordInput');
+        const loginBtn = document.getElementById('loginBtn');
+        const signupLink = document.getElementById('signupLink');
+        const backArrow = document.getElementById('backArrow');
+        const authHeading = document.getElementById('authHeading');
+
+        if (backArrow) {
+          backArrow.addEventListener('click', function() {
+            window.location.href = 'firstpage.html';
+          });
+        }
+
+        if (signupLink && loginBtn && authHeading) {
+          signupLink.addEventListener('click', function() {
+            const loginBtnSpan = loginBtn.querySelector('span');
+            if (loginBtnSpan.textContent.trim() === 'Log in') {
+              loginBtnSpan.textContent = 'Register';
+              signupLink.textContent = 'Already have an account? Log in';
+              authHeading.textContent = 'Create Account';
+            } else {
+              loginBtnSpan.textContent = 'Log in';
+              signupLink.textContent = "Don't have an account? Sign up";
+              authHeading.textContent = 'Welcome back';
+            }
+          });
+        }
+
+        if (loginBtn && emailInput && passwordInput && authHeading && signupLink) {
+          loginBtn.addEventListener('click', function() {
+            const email = emailInput.value.trim();
+            const password = passwordInput.value.trim();
+            const loginBtnSpan = loginBtn.querySelector('span');
+
+            if (!email || !password) {
+              alert('Email and password cannot be empty.');
+              return;
+            }
+
+            if (loginBtnSpan.textContent.trim() === 'Register') {
+              localStorage.setItem('userEmail', email);
+              localStorage.setItem('userPassword', password); // Store hashed password in real app
+              alert('Registration successful! Please log in.');
+              loginBtnSpan.textContent = 'Log in';
+              signupLink.textContent = "Don't have an account? Sign up";
+              authHeading.textContent = 'Welcome back';
+              // Clear fields after registration attempt
+              emailInput.value = '';
+              passwordInput.value = '';
+            } else { // Log in
+              const storedEmail = localStorage.getItem('userEmail');
+              const storedPassword = localStorage.getItem('userPassword');
+              // Allow login if no users are registered yet (first user) OR if credentials match.
+              if ((storedEmail === null && storedPassword === null) || (email === storedEmail && password === storedPassword)) {
+                alert('Login successful!');
+                window.location.href = 'homepage.html';
+              } else {
+                alert('Invalid email or password.');
+              }
+            }
+          });
+        }
+      });
+    </script>
   </body>
 </html>
